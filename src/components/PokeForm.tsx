@@ -73,6 +73,7 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
                 </Grid>
                 <Grid item xs={12} md={3}>
                     <TextField
+                        type="number"
                         label="Port"
                         value={port}
                         onChange={(ev) => setPort(ev.currentTarget.value)}
