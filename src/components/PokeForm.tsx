@@ -26,8 +26,8 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
     const [port, setPort] = useState("");
 
     useEffect(() => {
-        if (router.query["s"]) setServer(router.query["s"] as string)
-        if (router.query["p"]) setPort(router.query["p"] as string)
+        if (router.query["s"]) setServer(router.query["s"] as string);
+        if (router.query["p"]) setPort(router.query["p"] as string);
     }, [router])
 
     const canSubmit = useMemo(() => {
@@ -36,8 +36,11 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
 
     const submit = useCallback((ev: FormEvent) => {
         if (!canSubmit) return;
-        router.push("/", `/?s=${encodeURIComponent(server)}&p=${encodeURIComponent(port)}`)
-        startPoke({ server, port: parseInt(port) });
+        const clean = pokeTargetSchema.cast({ server: server.trim(), port })
+        setServer(clean.server);
+        setPort(clean.port.toString());
+        router.push({ pathname: "/", query: { s: clean.server, p: clean.port } }, `/?s=${encodeURIComponent(clean.server)}&p=${encodeURIComponent(clean.port)}`);
+        startPoke(clean);
         ev.preventDefault();
     }, [router, server, port, startPoke, canSubmit])
 
