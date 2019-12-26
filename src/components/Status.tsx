@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const Status: React.FC<Props> = ({ status, text, start, end }) => {
     const classes = useStyles();
     return <Paper className={clsx(classes.paper, classes[status])}>
-        <Grid container spacing={1} alignItems="center">
+        <Grid container spacing={1} alignItems="center" wrap="nowrap">
             <Grid item>
                 {status === "success" && <SuccessIcon className={classes.icon} />}
                 {status === "warning" && <WarningIcon className={classes.icon} />}
