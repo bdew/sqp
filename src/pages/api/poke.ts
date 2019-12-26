@@ -118,7 +118,7 @@ export default (req: NextApiRequest, res: NextApiResponse): void => {
         res.status(405).end()
     } else {
         pokeTargetSchema.validate(JSON.parse(req.body))
-            .then(target => doQuery(target).then(r => res.status(r.status === "error" ? 500 : 200).json(r)))
+            .then(target => doQuery(target).then(r => res.status(200).json(r)))
             .catch(e => {
                 if (e instanceof ValidationError) {
                     res.status(400).json({ status: "error", error: e.toString() })
