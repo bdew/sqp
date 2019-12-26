@@ -10,7 +10,7 @@ interface Props {
 
 const useStyles = makeStyles({
     badge: {
-        position: 'fixed',
+        position: 'absolute',
         top: '1rem',
         right: '1rem',
         zIndex: 9999
