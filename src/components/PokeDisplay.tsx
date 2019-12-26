@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PokeResult } from "../api-types";
-import { LinearProgress } from "@material-ui/core";
+import { LinearProgress, makeStyles } from "@material-ui/core";
 import { DecodedView } from "./DecodedView";
 import { Status } from "./Status";
 import { HexView } from "./HexView";
@@ -9,7 +9,15 @@ interface Props {
     promise: Promise<PokeResult>;
 }
 
+const useStyles = makeStyles({
+    prog: {
+        height: 10,
+        marginTop: -3
+    }
+});
+
 export const PokeDisplay: React.FC<Props> = ({ promise }) => {
+    const classes = useStyles();
     const [result, setResult] = useState<PokeResult>();
 
     useEffect(() => {
@@ -26,7 +34,7 @@ export const PokeDisplay: React.FC<Props> = ({ promise }) => {
             {result.status !== "error" && <HexView data={Buffer.from(result.raw, "hex")} />}
         </>
     } else {
-        return <LinearProgress variant="indeterminate" />
+        return <LinearProgress className={classes.prog} variant="indeterminate" />
     }
 
 }
