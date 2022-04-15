@@ -1,7 +1,7 @@
 import React from "react";
 import { Decoded } from "../api-types";
 import { Paper, Grid } from "@mui/material";
-import { makeStyles } from "../makeStyles";
+import { makeStyles } from "tss-react/mui"
 
 interface Props {
     data: Decoded;

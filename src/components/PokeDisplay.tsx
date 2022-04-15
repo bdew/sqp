@@ -4,7 +4,7 @@ import { LinearProgress } from "@mui/material";
 import { DecodedView } from "./DecodedView";
 import { Status } from "./Status";
 import { HexView } from "./HexView";
-import { makeStyles } from "../makeStyles";
+import { makeStyles } from "tss-react/mui"
 
 interface Props {
     promise: Promise<PokeResult>;

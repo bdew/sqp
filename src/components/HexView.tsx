@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Paper } from "@mui/material";
-import { makeStyles } from "../makeStyles";
+import { makeStyles } from "tss-react/mui"
 
 interface Props {
     data: Buffer;

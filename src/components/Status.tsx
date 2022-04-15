@@ -3,7 +3,7 @@ import { Paper, Grid, Theme } from "@mui/material";
 import SuccessIcon from "@mui/icons-material/CheckCircle";
 import WarningIcon from "@mui/icons-material/Warning";
 import ErrorIcon from "@mui/icons-material/Cancel";
-import { makeStyles } from "../makeStyles";
+import { makeStyles } from "tss-react/mui"
 
 interface Props {
     status: "success" | "warning" | "error";

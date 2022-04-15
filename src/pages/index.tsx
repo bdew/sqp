@@ -5,7 +5,7 @@ import { callPoke } from '../poke';
 import { PokeDisplay } from '../components/PokeDisplay';
 import { PokeTarget, PokeResult } from '../api-types';
 import { GithubBadge } from '../components/GithubBadge';
-import { makeStyles } from '../makeStyles';
+import { makeStyles } from "tss-react/mui"
 
 const useStyles = makeStyles()({
   title: {

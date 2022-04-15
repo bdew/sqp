@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '../makeStyles';
+import { makeStyles } from "tss-react/mui"
 
 interface Props {
     slug: string;

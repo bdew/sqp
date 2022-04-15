@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper";
 import { useRouter } from "next/router";
 import { PokeTarget, pokeTargetSchema } from "../api-types";
 import * as yup from "yup";
-import { makeStyles } from "../makeStyles";
+import { makeStyles } from "tss-react/mui"
 
 interface Props {
     startPoke: (target: PokeTarget) => void;
