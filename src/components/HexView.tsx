@@ -1,11 +1,12 @@
 import React, { useMemo } from "react";
-import { makeStyles, Paper } from "@material-ui/core";
+import { Paper } from "@mui/material";
+import { makeStyles } from "../makeStyles";
 
 interface Props {
     data: Buffer;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
     paper: {
         padding: 10,
         marginTop: 10,
@@ -34,7 +35,7 @@ function dump(buff: Buffer): string {
 }
 
 export const HexView: React.FC<Props> = ({ data }) => {
-    const classes = useStyles();
+    const { classes } = useStyles();
     const content = useMemo(() => dump(data), [data]);
     return <Paper className={classes.paper}>
         {content}

@@ -1,9 +1,9 @@
 import React from "react";
-import { Paper, Grid, Theme, makeStyles } from "@material-ui/core";
-import SuccessIcon from "@material-ui/icons/CheckCircle";
-import WarningIcon from "@material-ui/icons/Warning";
-import ErrorIcon from "@material-ui/icons/Cancel";
-import clsx from "clsx";
+import { Paper, Grid, Theme } from "@mui/material";
+import SuccessIcon from "@mui/icons-material/CheckCircle";
+import WarningIcon from "@mui/icons-material/Warning";
+import ErrorIcon from "@mui/icons-material/Cancel";
+import { makeStyles } from "../makeStyles";
 
 interface Props {
     status: "success" | "warning" | "error";
@@ -12,7 +12,7 @@ interface Props {
     text: string | JSX.Element;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
     paper: {
         padding: 10,
         marginTop: 10,
@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export const Status: React.FC<Props> = ({ status, text, start, end }) => {
-    const classes = useStyles();
-    return <Paper className={clsx(classes.paper, classes[status])}>
+    const { classes, cx } = useStyles();
+    return <Paper className={cx(classes.paper, classes[status])}>
         <Grid container spacing={1} alignItems="center" wrap="nowrap">
             <Grid item>
                 {status === "success" && <SuccessIcon className={classes.icon} />}

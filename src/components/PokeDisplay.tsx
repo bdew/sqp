@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { PokeResult } from "../api-types";
-import { LinearProgress, makeStyles } from "@material-ui/core";
+import { LinearProgress } from "@mui/material";
 import { DecodedView } from "./DecodedView";
 import { Status } from "./Status";
 import { HexView } from "./HexView";
+import { makeStyles } from "../makeStyles";
 
 interface Props {
     promise: Promise<PokeResult>;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
     prog: {
         height: 10,
         marginTop: -3
@@ -17,7 +18,7 @@ const useStyles = makeStyles({
 });
 
 export const PokeDisplay: React.FC<Props> = ({ promise }) => {
-    const classes = useStyles();
+    const { classes } = useStyles();
     const [result, setResult] = useState<PokeResult>();
 
     useEffect(() => {

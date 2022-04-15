@@ -1,12 +1,13 @@
 import React from "react";
 import { Decoded } from "../api-types";
-import { makeStyles, Paper, Grid } from "@material-ui/core";
+import { Paper, Grid } from "@mui/material";
+import { makeStyles } from "../makeStyles";
 
 interface Props {
     data: Decoded;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
     paper: {
         padding: 10,
         marginTop: 10,
@@ -29,7 +30,7 @@ interface RowProps {
 }
 
 const DataRow: React.FC<RowProps> = ({ name, val }) => {
-    const classes = useStyles();
+    const { classes } = useStyles();
     return <Grid container className={classes.row}>
         <Grid item md={2} xs={12} className={classes.label}>{name}</Grid>
         <Grid item md={10} xs={12} className={classes.data}>{val}</Grid>
@@ -37,7 +38,7 @@ const DataRow: React.FC<RowProps> = ({ name, val }) => {
 }
 
 export const DecodedView: React.FC<Props> = ({ data }) => {
-    const classes = useStyles();
+    const { classes } = useStyles();
     return <Paper className={classes.paper}>
         <DataRow name="Game:" val={<>{data.game} ({data.gameId})</>} />
         <DataRow name="Name:" val={data.name} />

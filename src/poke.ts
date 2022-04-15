@@ -13,6 +13,6 @@ export async function callPoke(target: PokeTarget): Promise<PokeResult> {
         }
         return await res.json() as PokeResult;
     } catch (e) {
-        return { status: "error", error: `${e.toString()}` }
+        return { status: "error", error: `${e}` }
     }
 }

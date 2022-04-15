@@ -1,26 +1,26 @@
 import React, { useState, useCallback, useEffect, FormEvent, ClipboardEvent, useMemo } from "react";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 import { useRouter } from "next/router";
 import { PokeTarget, pokeTargetSchema } from "../api-types";
 import * as yup from "yup";
+import { makeStyles } from "../makeStyles";
 
 interface Props {
     startPoke: (target: PokeTarget) => void;
     block: boolean;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
     paper: {
         padding: 10
     },
 })
 
 export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
-    const classes = useStyles();
+    const { classes } = useStyles();
     const router = useRouter();
     const [server, setServer] = useState("");
     const [port, setPort] = useState("");

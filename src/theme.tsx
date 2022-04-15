@@ -1,9 +1,7 @@
-import { createTheme } from '@material-ui/core/styles';
-import createPalette from "@material-ui/core/styles/createPalette";
+import { createTheme } from '@mui/material/styles';
 
 export default createTheme({
-    palette: createPalette({
-        type: "dark"
-    })
+    palette: {
+        mode: 'dark',
+    },
 });
-

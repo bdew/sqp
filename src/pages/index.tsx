@@ -1,12 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { PokeForm } from '../components/PokeForm';
-import { Typography, makeStyles, Container } from '@material-ui/core';
+import { Typography, Container } from '@mui/material';
 import { callPoke } from '../poke';
 import { PokeDisplay } from '../components/PokeDisplay';
 import { PokeTarget, PokeResult } from '../api-types';
 import { GithubBadge } from '../components/GithubBadge';
+import { makeStyles } from '../makeStyles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
   title: {
     textAlign: "center",
     fontSize: 30,
@@ -15,7 +16,7 @@ const useStyles = makeStyles({
 })
 
 export default function Index(): JSX.Element {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [poke, setPoke] = useState<Promise<PokeResult>>();
   const [block, setBlock] = useState(false);
   const startPoke = useCallback((target: PokeTarget) => {

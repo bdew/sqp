@@ -1,32 +1,36 @@
 import React from 'react';
-import App from 'next/app';
+import { AppProps } from 'next/app';
 import Head from 'next/head';
-import { ThemeProvider } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CssBaseline from '@mui/material/CssBaseline';
 import theme from '../theme';
+import { CacheProvider, EmotionCache } from '@emotion/react';
+import createCache from '@emotion/cache';
+import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 
-export default class MyApp extends App {
-  componentDidMount(): void {
-    const jssStyles = document.querySelector('#jss-server-side');
-    if (jssStyles && jssStyles.parentElement) {
-      jssStyles.parentElement.removeChild(jssStyles);
-    }
-  }
+let muiCache: EmotionCache | undefined = undefined;
 
-  render(): JSX.Element {
-    const { Component, pageProps } = this.props;
+export const createMuiCache = (): EmotionCache =>
+    muiCache = createCache({ 
+        "key": "mui", 
+        "prepend": true 
+    });
 
-    return (
-      <React.Fragment>
-        <Head>
-          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
-          <title>Steam Query Poke</title>
-        </Head>
-        <ThemeProvider theme={theme}>
+
+function App({ Component, pageProps }: AppProps): React.ReactElement {
+  return (
+    <>
+      <Head>
+        <title>Steam Query Poke</title>
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
+      </Head>
+      <CacheProvider value={muiCache ?? createMuiCache()}>
+        <MuiThemeProvider theme={theme}>
           <CssBaseline />
           <Component {...pageProps} />
-        </ThemeProvider>
-      </React.Fragment>
-    );
-  }
+        </MuiThemeProvider>
+      </CacheProvider>
+    </>
+  );
 }
+
+export default App
