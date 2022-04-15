@@ -36,7 +36,7 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
 
     const submit = useCallback((ev: FormEvent) => {
         if (!canSubmit) return;
-        const clean = pokeTargetSchema.cast({ server: server.trim(), port })
+        const clean = pokeTargetSchema.validateSync({ server: server.trim(), port })
         setServer(clean.server);
         setPort(clean.port.toString());
         router.push({ pathname: "/", query: { s: clean.server, p: clean.port } }, `/?s=${encodeURIComponent(clean.server)}&p=${encodeURIComponent(clean.port)}`);
@@ -58,7 +58,7 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
 
     return <form onSubmit={submit}>
         <Paper className={classes.paper}>
-            <Grid container justify="center" alignItems="center" spacing={2}>
+            <Grid container justifyContent="center" alignItems="center" spacing={2}>
                 <Grid item xs={12} md={6}>
                     <TextField
                         label="Server"

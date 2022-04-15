@@ -97,35 +97,38 @@ function decode(msg: Buffer): Decoded {
 }
 
 async function doQuery(target: PokeTarget): Promise<PokeResult> {
+    const start = process.hrtime();
+    const r = await query(target.server, target.port);
+    const time = process.hrtime(start);
+    const msec = time[0] * 1000 + time[1] / 1e6;
     try {
-        const start = process.hrtime();
-        const r = await query(target.server, target.port);
-        const time = process.hrtime(start);
-        const msec = time[0] * 1000 + time[1] / 1e6;
-        try {
-            const decoded = decode(r);
-            return { status: "ok", decoded, raw: r.toString("hex"), time: msec };
-        } catch (e) {
-            return { status: "nodecode", error: e.toString(), raw: r.toString("hex"), time: msec };
-        }
+        const decoded = decode(r);
+        return { status: "ok", decoded, raw: r.toString("hex"), time: msec };
     } catch (e) {
-        return ({ status: "error", error: e.toString() });
+        if (e instanceof Error)
+            return { status: "nodecode", error: e.toString(), raw: r.toString("hex"), time: msec };
+        else throw e;
     }
 }
 
-export default (req: NextApiRequest, res: NextApiResponse): void => {
+export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
     if (req.method !== "POST") {
         res.status(405).end()
     } else {
-        pokeTargetSchema.validate(JSON.parse(req.body))
-            .then(target => doQuery(target).then(r => res.status(200).json(r)))
-            .catch(e => {
-                if (e instanceof ValidationError) {
-                    res.status(400).json({ status: "error", error: e.toString() })
-                } else {
-                    console.error(e);
-                    res.status(500).json({ status: "error", error: e.toString() })
-                }
-            });
+        const target = await pokeTargetSchema.validate(JSON.parse(req.body))
+        try {
+            const result = await doQuery(target);
+            res.status(200).json(result);
+        } catch (e) {
+            if (e instanceof ValidationError) {
+                res.status(400).json({ status: "error", error: e.toString() })
+            } else if (e instanceof Error) {
+                console.error(e);
+                res.status(500).json({ status: "error", error: e.toString() })
+            } else {
+                console.error(e);
+                res.status(500).json({ status: "error", error: "unknown error" })
+            }
+        }
     }
 }

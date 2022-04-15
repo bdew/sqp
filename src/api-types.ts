@@ -46,7 +46,7 @@ export interface PokeResultError {
 
 export type PokeResult = PokeResultOK | PokeResultFailedDecode | PokeResultError
 
-export const pokeTargetSchema: yup.Schema<PokeTarget> = yup.object({
+export const pokeTargetSchema: yup.SchemaOf<PokeTarget> = yup.object().shape({
     server: yup.string().required(),
-    port: yup.number().integer().positive().lessThan(65536)
-})
+    port: yup.number().required().integer().positive().lessThan(65536)
+}).required()
