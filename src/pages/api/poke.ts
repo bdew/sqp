@@ -3,9 +3,15 @@ import { createSocket } from "dgram";
 import { PokeTarget, Decoded, PokeResult, pokeTargetSchema } from "../../api-types";
 import { ValidationError } from "yup";
 
-function query(host: string, port: number): Promise<Buffer> {
+function query(host: string, port: number, challenge?: string): Promise<Buffer> {
+    console.log("poke", challenge)
     const sock = createSocket("udp4");
-    const buffer = Buffer.concat([Buffer.from("ffffffff", "hex"), Buffer.from("TSource Engine Query"), Buffer.from("00", "hex")])
+    const buffer = Buffer.concat([
+        Buffer.from("ffffffff", "hex"),
+        Buffer.from("TSource Engine Query"),
+        Buffer.from("00", "hex"),
+        challenge ? Buffer.from(challenge, "hex") : Buffer.alloc(0)
+    ])
     return new Promise((resolve, reject) => {
         const timeout = setTimeout(() => {
             reject(new Error("The server didn't respond within the time limit."));
@@ -31,7 +37,7 @@ function query(host: string, port: number): Promise<Buffer> {
 }
 
 function readZStr(buf: Buffer, start: number): [string, number] {
-    const s = buf.slice(start);
+    const s = buf.subarray(start);
     const e = s.findIndex(v => v === 0);
     return [s.toString(undefined, 0, e), start + e + 1];
 }
@@ -49,9 +55,19 @@ function decodeType(s: string): string {
     return `Unknown (${s})`;
 }
 
+function getChallenge(msg: Buffer): string | null {
+    if (msg.subarray(0, 4).toString("hex") !== "ffffffff") throw new Error("Header mismatch");
+    if (msg.subarray(4, 5).toString() === "A") {
+        return msg.subarray(5, 9).toString("hex");
+    } else {
+        return null;
+    }
+}
+
 function decode(msg: Buffer): Decoded {
-    if (msg.slice(0, 4).toString("hex") !== "ffffffff") throw new Error("Header mismatch");
-    if (msg.slice(4, 5).toString() !== "I") throw new Error("Unexpected packet type");
+    if (msg.subarray(0, 4).toString("hex") !== "ffffffff") throw new Error("Header mismatch");
+    if (msg.subarray(4, 5).toString() !== "I") throw new Error("Unexpected packet type");
+
     const protocol = msg.readUInt8(5);
     const [name, mapStart] = readZStr(msg, 6);
     const [map, folderStart] = readZStr(msg, mapStart);
@@ -96,14 +112,21 @@ function decode(msg: Buffer): Decoded {
     return { protocol, name, map, folder, game, gameId, players, maxPlayers, bots, type, env, visibility, vac, version, port, steamId, keywords }
 }
 
-async function doQuery(target: PokeTarget): Promise<PokeResult> {
+async function doQuery(target: PokeTarget, challenge?: string): Promise<PokeResult> {
     const start = process.hrtime();
-    const r = await query(target.server, target.port);
+    const r = await query(target.server, target.port, challenge);
     const time = process.hrtime(start);
     const msec = time[0] * 1000 + time[1] / 1e6;
     try {
-        const decoded = decode(r);
-        return { status: "ok", decoded, raw: r.toString("hex"), time: msec };
+        const chreq = getChallenge(r);
+        if (chreq) {
+            if (challenge)
+                throw new Error("Failed to get challenge");
+            else
+                return doQuery(target, chreq);
+        } else {
+            return { status: "ok", decoded: decode(r), raw: r.toString("hex"), time: msec, challenge: !!challenge };
+        }
     } catch (e) {
         if (e instanceof Error)
             return { status: "nodecode", error: e.toString(), raw: r.toString("hex"), time: msec };

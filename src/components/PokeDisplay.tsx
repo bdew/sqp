@@ -28,7 +28,7 @@ export const PokeDisplay: React.FC<Props> = ({ promise }) => {
 
     if (result) {
         return <>
-            {result.status === "ok" && <Status status="success" text={`Server responded after ${result.time.toFixed(0)}ms`} />}
+            {result.status === "ok" && <Status status="success" text={`Server responded after ${result.time.toFixed(0)}ms${result.challenge && " (after challenge)"}`} />}
             {result.status === "nodecode" && <Status status="warning" text={`Server responded after ${result.time.toFixed(0)}ms but decoding failed (${result.error})`} />}
             {result.status === "error" && <Status status="error" text={result.error} />}
             {result.status === "ok" && <DecodedView data={result.decoded} />}

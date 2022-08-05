@@ -27,6 +27,7 @@ export interface Decoded {
 
 export interface PokeResultOK {
     status: "ok";
+    challenge: boolean;
     decoded: Decoded;
     raw: string;
     time: number;
