@@ -1,6 +1,7 @@
 import React from "react";
 import { Decoded } from "../api-types";
-import { Paper, Grid } from "@mui/material";
+import { Paper } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { makeStyles } from "tss-react/mui"
 
 interface Props {
@@ -25,15 +26,15 @@ const useStyles = makeStyles()({
 })
 
 interface RowProps {
-    name: string | JSX.Element;
-    val: string | JSX.Element;
+    name: string | React.ReactNode;
+    val: string | React.ReactNode;
 }
 
 const DataRow: React.FC<RowProps> = ({ name, val }) => {
     const { classes } = useStyles();
     return <Grid container className={classes.row}>
-        <Grid item md={2} xs={12} className={classes.label}>{name}</Grid>
-        <Grid item md={10} xs={12} className={classes.data}>{val}</Grid>
+        <Grid size={2} className={classes.label}>{name}</Grid>
+        <Grid size={10} className={classes.data}>{val}</Grid>
     </Grid>
 }
 

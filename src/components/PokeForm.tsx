@@ -1,12 +1,11 @@
-import React, { useState, useCallback, useEffect, FormEvent, ClipboardEvent, useMemo } from "react";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
 import { useRouter } from "next/router";
+import React, { ClipboardEvent, FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { makeStyles } from "tss-react/mui";
 import { PokeTarget, pokeTargetSchema } from "../api-types";
-import * as yup from "yup";
-import { makeStyles } from "tss-react/mui"
 
 interface Props {
     startPoke: (target: PokeTarget) => void;
@@ -31,18 +30,19 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
     }, [router])
 
     const canSubmit = useMemo(() => {
-        return !block && pokeTargetSchema.isValidSync({ server, port });
+        console.log(pokeTargetSchema.safeParse({ server, port }))
+        return !block && pokeTargetSchema.safeParse({ server, port }).success;
     }, [server, port, block])
 
     const submit = useCallback((ev: FormEvent) => {
-        if (!canSubmit) return;
-        const clean = pokeTargetSchema.validateSync({ server: server.trim(), port })
-        setServer(clean.server);
-        setPort(clean.port.toString());
-        router.push({ pathname: "/", query: { s: clean.server, p: clean.port } }, `/?s=${encodeURIComponent(clean.server)}&p=${encodeURIComponent(clean.port)}`);
-        startPoke(clean);
+        const { data, success } = pokeTargetSchema.safeParse({ server, port })
+        if (!success) return;
+        setServer(data.server);
+        setPort(data.port.toString());
+        router.push({ pathname: "/", query: { s: data.server, p: data.port } }, `/?s=${encodeURIComponent(data.server)}&p=${encodeURIComponent(data.port)}`);
+        startPoke(data);
         ev.preventDefault();
-    }, [router, server, port, startPoke, canSubmit])
+    }, [router, server, port, startPoke])
 
     const paste = useCallback((ev: ClipboardEvent) => {
         const txt = ev.clipboardData.getData('Text')
@@ -59,30 +59,30 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
     return <form onSubmit={submit}>
         <Paper className={classes.paper}>
             <Grid container justifyContent="center" alignItems="center" spacing={2}>
-                <Grid item xs={12} md={6}>
+                <Grid size={6}>
                     <TextField
                         label="Server"
                         value={server}
                         onChange={(ev) => setServer(ev.currentTarget.value)}
-                        error={server > "" && !yup.reach(pokeTargetSchema, "server").isValidSync(server)}
+                        error={server > "" && !pokeTargetSchema.pick({ server: true }).safeParse({ server }).success}
                         variant="outlined"
                         size="small"
                         fullWidth
                         onPaste={paste}
                     />
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid size={3}>
                     <TextField
                         type="number"
                         label="Port"
                         value={port}
                         onChange={(ev) => setPort(ev.currentTarget.value)}
-                        error={port > "" && !yup.reach(pokeTargetSchema, "port").isValidSync(port)}
+                        error={port > "" && !pokeTargetSchema.pick({ port: true }).safeParse({ port }).success}
                         variant="outlined"
                         size="small"
                         fullWidth />
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid size={3}>
                     <Button type="submit" disabled={!canSubmit} variant="contained" color="primary" fullWidth>Poke 👆</Button>
                 </Grid>
             </Grid>

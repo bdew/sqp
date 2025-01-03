@@ -7,7 +7,8 @@ export async function callPoke(target: PokeTarget): Promise<PokeResult> {
         if (!res.ok) {
             try {
                 return await res.json() as PokeResult;
-            } catch (ignored) {
+            } catch (err) {
+                console.error(err);
                 return { status: "error", error: `${res.status} - ${res.statusText}` }
             }
         }

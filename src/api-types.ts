@@ -1,4 +1,4 @@
-import * as yup from "yup";
+import { z } from "zod";
 
 export interface PokeTarget {
     server: string;
@@ -47,7 +47,7 @@ export interface PokeResultError {
 
 export type PokeResult = PokeResultOK | PokeResultFailedDecode | PokeResultError
 
-export const pokeTargetSchema: yup.SchemaOf<PokeTarget> = yup.object().shape({
-    server: yup.string().required(),
-    port: yup.number().required().integer().positive().lessThan(65536)
-}).required()
+export const pokeTargetSchema = z.object({
+    server: z.string().trim(),
+    port: z.coerce.number().positive().max(65535)
+});

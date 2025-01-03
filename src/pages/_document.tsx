@@ -1,8 +1,7 @@
+import Document, { Head, Html, Main, NextScript } from "next/document";
 import React from "react";
-import Document, { Html, Main, NextScript, Head } from "next/document";
-import { withEmotionCache } from "tss-react/nextJs";
-import { createMuiCache } from "./_app";
 import theme from '../theme';
+import { augmentDocumentWithEmotionCache } from "./_app";
 
 class MyDocument extends Document {
   render(): React.ReactElement {
@@ -26,7 +25,6 @@ class MyDocument extends Document {
   }
 }
 
-export default withEmotionCache({
-  "Document": MyDocument,
-  "getCaches": () => [createMuiCache()]
-});
+augmentDocumentWithEmotionCache(MyDocument);
+
+export default MyDocument;

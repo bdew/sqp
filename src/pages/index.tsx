@@ -15,7 +15,7 @@ const useStyles = makeStyles()({
   }
 })
 
-export default function Index(): JSX.Element {
+export default function Index(): React.ReactNode {
   const { classes } = useStyles();
   const [poke, setPoke] = useState<Promise<PokeResult>>();
   const [block, setBlock] = useState(false);

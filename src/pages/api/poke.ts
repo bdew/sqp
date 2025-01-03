@@ -1,10 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { createSocket } from "dgram";
 import { PokeTarget, Decoded, PokeResult, pokeTargetSchema } from "../../api-types";
-import { ValidationError } from "yup";
 
 function query(host: string, port: number, challenge?: string): Promise<Buffer> {
-    console.log("poke", challenge)
     const sock = createSocket("udp4");
     const buffer = Buffer.concat([
         Buffer.from("ffffffff", "hex"),
@@ -138,14 +136,16 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
     if (req.method !== "POST") {
         res.status(405).end()
     } else {
-        const target = await pokeTargetSchema.validate(JSON.parse(req.body))
+        const { data, success, error } = pokeTargetSchema.safeParse(JSON.parse(req.body))
+        if (!success) {
+            res.status(400).json({ status: "error", error: error.format() });
+            return;
+        }
         try {
-            const result = await doQuery(target);
+            const result = await doQuery(data);
             res.status(200).json(result);
         } catch (e) {
-            if (e instanceof ValidationError) {
-                res.status(400).json({ status: "error", error: e.toString() })
-            } else if (e instanceof Error) {
+            if (e instanceof Error) {
                 console.error(e);
                 res.status(500).json({ status: "error", error: e.toString() })
             } else {
