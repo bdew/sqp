@@ -1,8 +1,8 @@
-import React from "react";
-import { Decoded } from "../api-types";
-import { Paper } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid2";
+import React from "react";
 import { makeStyles } from "tss-react/mui";
+import { Decoded } from "../api-types";
 
 interface Props {
     data: Decoded;
@@ -34,8 +34,8 @@ const DataRow: React.FC<RowProps> = ({ name, val }) => {
     const { classes } = useStyles();
     return (
         <Grid container className={classes.row}>
-            <Grid size={2} className={classes.label}>{name}</Grid>
-            <Grid size={10} className={classes.data}>{val}</Grid>
+            <Grid size={{ md: 2, xs: 12 }} className={classes.label}>{name}</Grid>
+            <Grid size={{ md: 10, xs: 12 }} className={classes.data}>{val}</Grid>
         </Grid>
     );
 };

@@ -1,11 +1,10 @@
-import React from "react";
+import ErrorIcon from "@mui/icons-material/Cancel";
 import SuccessIcon from "@mui/icons-material/CheckCircle";
 import WarningIcon from "@mui/icons-material/Warning";
-import ErrorIcon from "@mui/icons-material/Cancel";
-import { makeStyles } from "tss-react/mui";
-import { Theme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
+import React from "react";
+import { makeStyles } from "tss-react/mui";
 
 interface Props {
     status: "success" | "warning" | "error";
@@ -14,7 +13,7 @@ interface Props {
     text: string | React.ReactNode;
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
     paper: {
         padding: 10,
         marginTop: 10,

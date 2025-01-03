@@ -1,5 +1,5 @@
+import Paper from "@mui/material/Paper";
 import React, { useMemo } from "react";
-import { Paper } from "@mui/material";
 import { makeStyles } from "tss-react/mui";
 
 interface Props {

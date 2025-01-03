@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { PokeResult } from "../api-types";
-import { LinearProgress } from "@mui/material";
-import { DecodedView } from "./DecodedView";
-import { Status } from "./Status";
-import { HexView } from "./HexView";
+import LinearProgress from "@mui/material/LinearProgress";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "tss-react/mui";
+import { PokeResult } from "../api-types";
+import { DecodedView } from "./DecodedView";
+import { HexView } from "./HexView";
+import { Status } from "./Status";
 
 interface Props {
     promise: Promise<PokeResult>;

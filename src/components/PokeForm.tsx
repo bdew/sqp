@@ -59,7 +59,7 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
         <form onSubmit={submit}>
             <Paper className={classes.paper}>
                 <Grid container justifyContent="center" alignItems="center" spacing={2}>
-                    <Grid size={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <TextField
                             label="Server"
                             value={server}
@@ -71,7 +71,7 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
                             onPaste={paste}
                         />
                     </Grid>
-                    <Grid size={3}>
+                    <Grid size={{ xs: 12, md: 3 }}>
                         <TextField
                             type="number"
                             label="Port"
@@ -83,7 +83,7 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
                             fullWidth
                         />
                     </Grid>
-                    <Grid size={3}>
+                    <Grid size={{ xs: 12, md: 3 }}>
                         <Button type="submit" disabled={!canSubmit} variant="contained" color="primary" fullWidth>Poke 👆</Button>
                     </Grid>
                 </Grid>
