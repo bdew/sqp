@@ -5,10 +5,10 @@ RUN yarn install --frozen-lockfile
 COPY . .
 RUN yarn run build
 
-FROM node:18-alpine
+FROM gcr.io/distroless/nodejs:18
 WORKDIR /srv/sqp
-USER daemon
+USER 1000
 COPY --from=builder /build/.next/standalone /srv/sqp
 COPY --from=builder /build/.next/static /srv/sqp/.next/static
 COPY public /srv/sqp/public
-CMD ["node", "server.js"]
+CMD ["server.js"]
