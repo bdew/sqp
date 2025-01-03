@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next"
 import { createSocket } from "dgram";
-import { PokeTarget, Decoded, PokeResult, pokeTargetSchema } from "../../api-types";
+import { NextApiRequest, NextApiResponse } from "next";
+import { Decoded, PokeResult, PokeTarget, pokeTargetSchema } from "../../api-types";
 
 function query(host: string, port: number, challenge?: string): Promise<Buffer> {
     const sock = createSocket("udp4");
@@ -8,22 +8,22 @@ function query(host: string, port: number, challenge?: string): Promise<Buffer> 
         Buffer.from("ffffffff", "hex"),
         Buffer.from("TSource Engine Query"),
         Buffer.from("00", "hex"),
-        challenge ? Buffer.from(challenge, "hex") : Buffer.alloc(0)
-    ])
+        challenge ? Buffer.from(challenge, "hex") : Buffer.alloc(0),
+    ]);
     return new Promise((resolve, reject) => {
         const timeout = setTimeout(() => {
             reject(new Error("The server didn't respond within the time limit."));
             sock.close();
         }, 10000);
 
-        sock.on('error', (err) => {
+        sock.on("error", (err) => {
             reject(err);
             sock.close();
             clearTimeout(timeout);
         });
 
-        sock.on('message', (msg) => {
-            resolve(msg)
+        sock.on("message", (msg) => {
+            resolve(msg);
             sock.close();
             clearTimeout(timeout);
         });
@@ -31,7 +31,7 @@ function query(host: string, port: number, challenge?: string): Promise<Buffer> 
         sock.bind(0);
 
         sock.send(buffer, port, host);
-    })
+    });
 }
 
 function readZStr(buf: Buffer, start: number): [string, number] {
@@ -107,7 +107,7 @@ function decode(msg: Buffer): Decoded {
         ptr += 8;
     }
 
-    return { protocol, name, map, folder, game, gameId, players, maxPlayers, bots, type, env, visibility, vac, version, port, steamId, keywords }
+    return { protocol, name, map, folder, game, gameId, players, maxPlayers, bots, type, env, visibility, vac, version, port, steamId, keywords };
 }
 
 async function doQuery(target: PokeTarget, challenge?: string): Promise<PokeResult> {
@@ -134,9 +134,9 @@ async function doQuery(target: PokeTarget, challenge?: string): Promise<PokeResu
 
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
     if (req.method !== "POST") {
-        res.status(405).end()
+        res.status(405).end();
     } else {
-        const { data, success, error } = pokeTargetSchema.safeParse(JSON.parse(req.body))
+        const { data, success, error } = pokeTargetSchema.safeParse(JSON.parse(req.body));
         if (!success) {
             res.status(400).json({ status: "error", error: error.format() });
             return;
@@ -147,11 +147,11 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
         } catch (e) {
             if (e instanceof Error) {
                 console.error(e);
-                res.status(500).json({ status: "error", error: e.toString() })
+                res.status(500).json({ status: "error", error: e.toString() });
             } else {
                 console.error(e);
-                res.status(500).json({ status: "error", error: "unknown error" })
+                res.status(500).json({ status: "error", error: "unknown error" });
             }
         }
     }
-}
+};

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Paper } from "@mui/material";
-import { makeStyles } from "tss-react/mui"
+import { makeStyles } from "tss-react/mui";
 
 interface Props {
     data: Buffer;
@@ -13,14 +13,13 @@ const useStyles = makeStyles()({
         whiteSpace: "pre",
         fontFamily: "monospace",
         fontSize: 16,
-        overflowX: "auto"
+        overflowX: "auto",
     },
-})
-
+});
 
 function dump(buff: Buffer): string {
     const slices = Math.floor((buff.length + 15) / 16);
-    const out: string[] = []
+    const out: string[] = [];
     for (let i = 0; i < slices; i++) {
         const chunk = buff.slice(i * 16, (i + 1) * 16);
         const hex: string[] = [];
@@ -28,8 +27,7 @@ function dump(buff: Buffer): string {
             if (j % 4 === 0) hex.push("  ");
             hex.push(chunk[j].toString(16).padStart(2, "0"));
         }
-        out.push(hex.join(" ").padEnd(60, " ") + " | " + Buffer.from(chunk.map(c => c > 16 && c < 127 ? c : 46)).toString("ascii"))
-
+        out.push(hex.join(" ").padEnd(60, " ") + " | " + Buffer.from(chunk.map(c => c > 16 && c < 127 ? c : 46)).toString("ascii"));
     }
     return out.join("\n");
 }
@@ -37,7 +35,9 @@ function dump(buff: Buffer): string {
 export const HexView: React.FC<Props> = ({ data }) => {
     const { classes } = useStyles();
     const content = useMemo(() => dump(data), [data]);
-    return <Paper className={classes.paper}>
-        {content}
-    </Paper>
-}
+    return (
+        <Paper className={classes.paper}>
+            {content}
+        </Paper>
+    );
+};

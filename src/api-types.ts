@@ -45,9 +45,9 @@ export interface PokeResultError {
     error: string;
 }
 
-export type PokeResult = PokeResultOK | PokeResultFailedDecode | PokeResultError
+export type PokeResult = PokeResultOK | PokeResultFailedDecode | PokeResultError;
 
 export const pokeTargetSchema = z.object({
     server: z.string().trim(),
-    port: z.coerce.number().positive().max(65535)
+    port: z.coerce.number().positive().max(65535),
 });

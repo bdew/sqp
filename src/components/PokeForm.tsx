@@ -14,9 +14,9 @@ interface Props {
 
 const useStyles = makeStyles()({
     paper: {
-        padding: 10
+        padding: 10,
     },
-})
+});
 
 export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
     const { classes } = useStyles();
@@ -27,65 +27,67 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
     useEffect(() => {
         if (router.query["s"]) setServer(router.query["s"] as string);
         if (router.query["p"]) setPort(router.query["p"] as string);
-    }, [router])
+    }, [router]);
 
     const canSubmit = useMemo(() => {
-        console.log(pokeTargetSchema.safeParse({ server, port }))
         return !block && pokeTargetSchema.safeParse({ server, port }).success;
-    }, [server, port, block])
+    }, [server, port, block]);
 
     const submit = useCallback((ev: FormEvent) => {
-        const { data, success } = pokeTargetSchema.safeParse({ server, port })
+        const { data, success } = pokeTargetSchema.safeParse({ server, port });
         if (!success) return;
         setServer(data.server);
         setPort(data.port.toString());
         router.push({ pathname: "/", query: { s: data.server, p: data.port } }, `/?s=${encodeURIComponent(data.server)}&p=${encodeURIComponent(data.port)}`);
         startPoke(data);
         ev.preventDefault();
-    }, [router, server, port, startPoke])
+    }, [router, server, port, startPoke]);
 
     const paste = useCallback((ev: ClipboardEvent) => {
-        const txt = ev.clipboardData.getData('Text')
+        const txt = ev.clipboardData.getData("Text");
         if (txt.includes(":")) {
-            const [server, rest] = txt.split(":", 2)
+            const [server, rest] = txt.split(":", 2);
             setServer(server);
             const port = parseInt(rest);
             if (port > 0)
                 setPort(port.toFixed(0));
             ev.preventDefault();
         }
-    }, [])
+    }, []);
 
-    return <form onSubmit={submit}>
-        <Paper className={classes.paper}>
-            <Grid container justifyContent="center" alignItems="center" spacing={2}>
-                <Grid size={6}>
-                    <TextField
-                        label="Server"
-                        value={server}
-                        onChange={(ev) => setServer(ev.currentTarget.value)}
-                        error={server > "" && !pokeTargetSchema.pick({ server: true }).safeParse({ server }).success}
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                        onPaste={paste}
-                    />
+    return (
+        <form onSubmit={submit}>
+            <Paper className={classes.paper}>
+                <Grid container justifyContent="center" alignItems="center" spacing={2}>
+                    <Grid size={6}>
+                        <TextField
+                            label="Server"
+                            value={server}
+                            onChange={ev => setServer(ev.currentTarget.value)}
+                            error={server > "" && !pokeTargetSchema.pick({ server: true }).safeParse({ server }).success}
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                            onPaste={paste}
+                        />
+                    </Grid>
+                    <Grid size={3}>
+                        <TextField
+                            type="number"
+                            label="Port"
+                            value={port}
+                            onChange={ev => setPort(ev.currentTarget.value)}
+                            error={port > "" && !pokeTargetSchema.pick({ port: true }).safeParse({ port }).success}
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid size={3}>
+                        <Button type="submit" disabled={!canSubmit} variant="contained" color="primary" fullWidth>Poke 👆</Button>
+                    </Grid>
                 </Grid>
-                <Grid size={3}>
-                    <TextField
-                        type="number"
-                        label="Port"
-                        value={port}
-                        onChange={(ev) => setPort(ev.currentTarget.value)}
-                        error={port > "" && !pokeTargetSchema.pick({ port: true }).safeParse({ port }).success}
-                        variant="outlined"
-                        size="small"
-                        fullWidth />
-                </Grid>
-                <Grid size={3}>
-                    <Button type="submit" disabled={!canSubmit} variant="contained" color="primary" fullWidth>Poke 👆</Button>
-                </Grid>
-            </Grid>
-        </Paper>
-    </form>
-}
+            </Paper>
+        </form>
+    );
+};
