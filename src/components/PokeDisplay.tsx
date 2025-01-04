@@ -1,5 +1,5 @@
 import LinearProgress from "@mui/material/LinearProgress";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { makeStyles } from "tss-react/mui";
 import { PokeResult } from "../api-types";
 import { DecodedView } from "./DecodedView";
@@ -7,7 +7,8 @@ import { HexView } from "./HexView";
 import { Status } from "./Status";
 
 interface Props {
-    promise: Promise<PokeResult>;
+    result: PokeResult | null;
+    pending: boolean;
 }
 
 const useStyles = makeStyles()({
@@ -17,16 +18,11 @@ const useStyles = makeStyles()({
     },
 });
 
-export const PokeDisplay: React.FC<Props> = ({ promise }) => {
+export const PokeDisplay: React.FC<Props> = ({ result, pending }) => {
     const { classes } = useStyles();
-    const [result, setResult] = useState<PokeResult>();
-
-    useEffect(() => {
-        setResult(undefined);
-        promise.then(setResult);
-    }, [promise]);
-
-    if (result) {
+    if (pending) {
+        return <LinearProgress className={classes.prog} variant="indeterminate" />;
+    } else if (result) {
         return (
             <>
                 {result.status === "ok" && <Status status="success" text={`Server responded after ${result.time.toFixed(0)}ms${result.challenge && " (after challenge)"}`} />}
@@ -36,7 +32,5 @@ export const PokeDisplay: React.FC<Props> = ({ promise }) => {
                 {result.status !== "error" && <HexView data={Buffer.from(result.raw, "hex")} />}
             </>
         );
-    } else {
-        return <LinearProgress className={classes.prog} variant="indeterminate" />;
     }
 };

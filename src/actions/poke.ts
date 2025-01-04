@@ -133,7 +133,7 @@ async function doQuery(target: PokeTarget, challenge?: string): Promise<PokeResu
     }
 }
 
-export async function doPoke(target: PokeTarget): Promise<PokeResult> {
+export async function pokeAction(target: PokeTarget): Promise<PokeResult> {
     const { data, success, error } = pokeTargetSchema.safeParse(target);
 
     if (!success) {
