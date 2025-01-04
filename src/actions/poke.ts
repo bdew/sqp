@@ -1,6 +1,7 @@
+"use server";
+
 import { createSocket } from "dgram";
-import { NextApiRequest, NextApiResponse } from "next";
-import { Decoded, PokeResult, PokeTarget, pokeTargetSchema } from "../../api-types";
+import { Decoded, PokeResult, PokeTarget, pokeTargetSchema } from "../api-types";
 
 function query(host: string, port: number, challenge?: string): Promise<Buffer> {
     const sock = createSocket("udp4");
@@ -132,26 +133,23 @@ async function doQuery(target: PokeTarget, challenge?: string): Promise<PokeResu
     }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-    if (req.method !== "POST") {
-        res.status(405).end();
-    } else {
-        const { data, success, error } = pokeTargetSchema.safeParse(JSON.parse(req.body));
-        if (!success) {
-            res.status(400).json({ status: "error", error: error.format() });
-            return;
-        }
-        try {
-            const result = await doQuery(data);
-            res.status(200).json(result);
-        } catch (e) {
-            if (e instanceof Error) {
-                console.error(e);
-                res.status(500).json({ status: "error", error: e.toString() });
-            } else {
-                console.error(e);
-                res.status(500).json({ status: "error", error: "unknown error" });
-            }
+export async function doPoke(target: PokeTarget): Promise<PokeResult> {
+    const { data, success, error } = pokeTargetSchema.safeParse(target);
+
+    if (!success) {
+        console.error(error);
+        return { status: "error", error: "invalid request" };
+    }
+
+    try {
+        return await doQuery(data);
+    } catch (e) {
+        if (e instanceof Error) {
+            console.error(e);
+            return { status: "error", error: e.toString() };
+        } else {
+            console.error(e);
+            return { status: "error", error: "unknown error" };
         }
     }
-};
+}

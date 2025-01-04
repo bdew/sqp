@@ -2,14 +2,16 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
-import { useRouter } from "next/router";
-import React, { ClipboardEvent, FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { ClipboardEvent, FormEvent, useCallback, useMemo, useState } from "react";
 import { makeStyles } from "tss-react/mui";
 import { PokeTarget, pokeTargetSchema } from "../api-types";
 
 interface Props {
     startPoke: (target: PokeTarget) => void;
     block: boolean;
+    server?: string;
+    port?: string;
 }
 
 const useStyles = makeStyles()({
@@ -18,16 +20,11 @@ const useStyles = makeStyles()({
     },
 });
 
-export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
+export const PokeForm: React.FC<Props> = ({ startPoke, block, server: initServer, port: initPort }) => {
     const { classes } = useStyles();
     const router = useRouter();
-    const [server, setServer] = useState("");
-    const [port, setPort] = useState("");
-
-    useEffect(() => {
-        if (router.query["s"]) setServer(router.query["s"] as string);
-        if (router.query["p"]) setPort(router.query["p"] as string);
-    }, [router]);
+    const [server, setServer] = useState(initServer ?? "");
+    const [port, setPort] = useState(initPort ?? "");
 
     const canSubmit = useMemo(() => {
         return !block && pokeTargetSchema.safeParse({ server, port }).success;
@@ -38,7 +35,7 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
         if (!success) return;
         setServer(data.server);
         setPort(data.port.toString());
-        router.push({ pathname: "/", query: { s: data.server, p: data.port } }, `/?s=${encodeURIComponent(data.server)}&p=${encodeURIComponent(data.port)}`);
+        router.push(`/?s=${encodeURIComponent(data.server)}&p=${encodeURIComponent(data.port)}`);
         startPoke(data);
         ev.preventDefault();
     }, [router, server, port, startPoke]);
