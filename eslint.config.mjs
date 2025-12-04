@@ -1,19 +1,20 @@
-// @ts-check
-
-import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
 import stylistic from "@stylistic/eslint-plugin";
-import { FlatCompat } from "@eslint/eslintrc";
 
-const compat = new FlatCompat();
-
-export default tseslint.config(
-    eslint.configs.recommended,
-    tseslint.configs.recommended,
-    tseslint.configs.stylistic,
-    compat.extends("plugin:react-hooks/recommended"),
-    compat.extends("plugin:@next/next/recommended"),
-    stylistic.configs["recommended-flat"],
+const eslintConfig = defineConfig([
+    ...nextVitals,
+    ...nextTs,
+    // Override default ignores of eslint-config-next.
+    globalIgnores([
+        // Default ignores of eslint-config-next:
+        ".next/**",
+        "out/**",
+        "build/**",
+        "next-env.d.ts",
+    ]),
+    stylistic.configs["recommended"],
     {
         rules: {
             "eqeqeq": "error",
@@ -40,4 +41,6 @@ export default tseslint.config(
             ],
         },
     },
-);
+]);
+
+export default eslintConfig;

@@ -1,7 +1,7 @@
 import ErrorIcon from "@mui/icons-material/Cancel";
 import SuccessIcon from "@mui/icons-material/CheckCircle";
 import WarningIcon from "@mui/icons-material/Warning";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import React from "react";
 import { makeStyles } from "tss-react/mui";
