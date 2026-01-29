@@ -1,7 +1,9 @@
 FROM --platform=$BUILDPLATFORM node:24-alpine AS builder
 WORKDIR /build
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile 
+COPY package.json yarn.lock .yarnrc.yml ./
+RUN --mount=type=cache,target=/root/.yarn/berry/cache,sharing=locked \
+    corepack enable && \
+    yarn install --immutable 
 COPY . .
 RUN yarn run build
 

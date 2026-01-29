@@ -3,4 +3,9 @@ node_modules
 .next
 .github
 .dockerignore
+.env
+.gitignore
+.yarn
+.vscode
 Dockerfile
+renovate.json
