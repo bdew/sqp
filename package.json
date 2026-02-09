@@ -29,14 +29,14 @@
     "@types/node": "^24.10.12",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/eslint-plugin": "^8.54.0",
-    "@typescript-eslint/parser": "^8.54.0",
+    "@typescript-eslint/eslint-plugin": "^8.55.0",
+    "@typescript-eslint/parser": "^8.55.0",
     "eslint": "^10.0.0",
     "eslint-config-next": "^16.1.6",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.54.0"
+    "typescript-eslint": "^8.55.0"
   },
   "packageManager": "yarn@4.12.0"
 }
