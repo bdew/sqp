@@ -5,7 +5,8 @@ RUN --mount=type=cache,target=/root/.yarn/berry/cache,sharing=locked \
     corepack enable && \
     yarn install --immutable 
 COPY . .
-RUN yarn run build
+RUN yarn lint
+RUN yarn build
 
 FROM gcr.io/distroless/nodejs24-debian13:latest
 WORKDIR /srv/sqp

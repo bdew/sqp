@@ -6,7 +6,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "eslint": "eslint src"
+    "lint": "eslint src"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
