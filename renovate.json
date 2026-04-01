@@ -4,6 +4,8 @@
     "config:recommended"
   ],
   "dependencyDashboard": true,
+  "prHourlyLimit": 10,
+  "prConcurrentLimit": 0,
   "packageRules": [
     {
       "matchDepTypes": [
@@ -19,7 +21,14 @@
         "pin",
         "digest"
       ],
-      "automerge": true
+      "automerge": true,
+      "groupName": "non-major dependencies",
+      "schedule": ["* 0 * * 5"]
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions",
+      "schedule": ["* 0 * * 5"]
     }
   ],
   "platformAutomerge": true
