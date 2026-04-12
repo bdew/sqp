@@ -16,6 +16,10 @@ const useStyles = makeStyles()({
     paper: {
         padding: 10,
     },
+    container: {
+        justifyContent: "center",
+        alignItems: "center",
+    },
 });
 
 export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
@@ -55,7 +59,7 @@ export const PokeForm: React.FC<Props> = ({ startPoke, block }) => {
     return (
         <form action={submit}>
             <Paper className={classes.paper}>
-                <Grid container justifyContent="center" alignItems="center" spacing={2}>
+                <Grid container className={classes.paper} spacing={2}>
                     <Grid size={{ xs: 12, md: 6 }}>
                         <TextField
                             name="server"

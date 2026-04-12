@@ -35,13 +35,16 @@ const useStyles = makeStyles()(theme => ({
         height: "1.5em",
         display: "block",
     },
+    bar: {
+        alignItems: "center",
+    },
 }));
 
 export const Status: React.FC<Props> = ({ status, text, start, end }) => {
     const { classes, cx } = useStyles();
     return (
         <Paper className={cx(classes.paper, classes[status])}>
-            <Grid container spacing={1} alignItems="center" wrap="nowrap">
+            <Grid container spacing={1} className={classes.bar} wrap="nowrap">
                 <Grid>
                     {status === "success" && <SuccessIcon className={classes.icon} />}
                     {status === "warning" && <WarningIcon className={classes.icon} />}
