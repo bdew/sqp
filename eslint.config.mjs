@@ -16,6 +16,9 @@ const eslintConfig = defineConfig([
     ]),
     stylistic.configs["recommended"],
     {
+        settings: {
+            react: { version: '19' },
+        },
         rules: {
             "eqeqeq": "error",
             "@typescript-eslint/explicit-function-return-type": ["warn", { allowExpressions: true }],
