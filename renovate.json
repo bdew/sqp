@@ -6,6 +6,7 @@
   "dependencyDashboard": true,
   "prHourlyLimit": 10,
   "prConcurrentLimit": 0,
+  "minimumReleaseAge": "1 day",
   "packageRules": [
     {
       "matchDepTypes": [
